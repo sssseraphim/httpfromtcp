@@ -37,7 +37,7 @@ func RequestFromReader(reader io.Reader) (*Request, error) {
 			copy(newBuffer, buffer)
 			buffer = newBuffer
 		}
-		numBytes, err := reader.Read(buffer[:readToIndex])
+		numBytes, err := reader.Read(buffer[readToIndex:])
 		if err != nil && err != io.EOF {
 			return nil, err
 		}
@@ -91,7 +91,7 @@ func (r *Request) parse(data []byte) (int, error) {
 		r.RequestLine = RequestLine{
 			Method:        method,
 			RequestTarget: target,
-			HttpVersion:   version,
+			HttpVersion:   version[5:],
 		}
 		r.Status = Done
 		return consumed, nil
